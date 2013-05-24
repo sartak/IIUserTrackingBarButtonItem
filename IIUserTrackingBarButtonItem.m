@@ -74,11 +74,10 @@
     [self.customView addSubview:newView];
 }
 
--(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    MKUserTrackingMode trackingMode = [change[@"new"] intValue];
+-(void) switchToMode:(MKUserTrackingMode)newMode {
     UIView *newView;
 
-    switch (trackingMode) {
+    switch (newMode) {
         default:
         case MKUserTrackingModeNone:
             newView = self.normalView;
@@ -92,6 +91,11 @@
     }
 
     [self switchToView:newView];
+}
+
+-(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    MKUserTrackingMode trackingMode = [change[@"new"] intValue];
+    [self switchToMode:trackingMode];
 }
 
 -(void) switchMode {
@@ -112,6 +116,9 @@
     }
 
     [self.mapView setUserTrackingMode:newMode animated:YES];
+
+    // setUserTrackingMode:animated: doesn't seem to fire KVO, so we have to manually switch views
+    [self switchToMode:newMode];
 }
 
 -(void) dealloc {
