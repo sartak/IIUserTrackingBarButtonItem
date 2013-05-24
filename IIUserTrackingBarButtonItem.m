@@ -111,7 +111,7 @@
             break;
     }
 
-    [self.mapView setUserTrackingMode:newMode];
+    [self.mapView setUserTrackingMode:newMode animated:YES];
 }
 
 -(void) dealloc {
