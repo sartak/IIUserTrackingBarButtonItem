@@ -1,5 +1,11 @@
 #import "IIUserTrackingBarButtonItem.h"
 
+@interface IIUserTrackingBarButtonItem ()
+
+@property (nonatomic, readonly) MKUserTrackingMode trackingMode;
+
+@end
+
 @implementation IIUserTrackingBarButtonItem
 
 -(id) initWithMapView:(MKMapView *)mapView normalView:(UIView *)normalView followView:(UIView *)followView headingView:(UIView *)headingView {    
@@ -18,6 +24,10 @@
 
     }
     return self;
+}
+
+-(MKUserTrackingMode) trackingMode {
+    return self.mapView.userTrackingMode;
 }
 
 -(UIGestureRecognizer *)switchModeRecognizer {
@@ -62,7 +72,7 @@
 }
 
 -(void) switchMode {
-    MKUserTrackingMode trackingMode = self.mapView.userTrackingMode;
+    MKUserTrackingMode trackingMode = self.trackingMode;
     MKUserTrackingMode newMode;
     
     switch (trackingMode) {
