@@ -8,7 +8,7 @@
 
 @implementation IIUserTrackingBarButtonItem
 
--(id) initWithMapView:(MKMapView *)mapView normalView:(UIView *)normalView followView:(UIView *)followView headingView:(UIView *)headingView {    
+-(id) initWithMapView:(MKMapView *)mapView normalView:(UIView *)normalView followView:(UIView *)followView headingView:(UIView *)headingView {
     self = [self initWithCustomView:[self parentView]];
     if (self) {
         self.normalView = normalView;
@@ -97,7 +97,7 @@
 -(void) switchMode {
     MKUserTrackingMode trackingMode = self.trackingMode;
     MKUserTrackingMode newMode;
-    
+
     switch (trackingMode) {
         default:
         case MKUserTrackingModeNone:
