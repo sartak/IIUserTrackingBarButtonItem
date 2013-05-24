@@ -26,7 +26,7 @@
 }
 
 -(UIGestureRecognizer *)switchModeRecognizer {
-    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(switchMode)];
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(mapSwitchedMode)];
     return recognizer;
 }
 
@@ -98,7 +98,7 @@
     [self switchToMode:trackingMode];
 }
 
--(void) switchMode {
+-(void) mapSwitchedMode {
     MKUserTrackingMode trackingMode = self.trackingMode;
     MKUserTrackingMode newMode;
 
