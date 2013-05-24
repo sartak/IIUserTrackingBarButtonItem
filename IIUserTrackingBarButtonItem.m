@@ -15,13 +15,8 @@
         self.followView = followView;
         self.headingView = headingView;
 
-        self.normalView.frame = CGRectMake(0, 0, 40, 40);
-        self.followView.frame = CGRectMake(0, 0, 40, 40);
-        self.headingView.frame = CGRectMake(0, 0, 40, 40);
-
         // assign mapView last since it fires off KVO immediately
         self.mapView = mapView;
-
     }
     return self;
 }
@@ -47,6 +42,38 @@
     [mapView addObserver:self forKeyPath:@"userTrackingMode" options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew context:NULL];
 }
 
+-(void) setNormalView:(UIView *)normalView {
+    _normalView = normalView;
+    _normalView.frame = CGRectMake(0, 0, 40, 40);
+    if (self.trackingMode == MKUserTrackingModeNone) {
+        [self switchToView:_normalView];
+    }
+}
+
+-(void) setFollowView:(UIView *)followView {
+    _followView = followView;
+    _followView.frame = CGRectMake(0, 0, 40, 40);
+    if (self.trackingMode == MKUserTrackingModeFollow) {
+        [self switchToView:_followView];
+    }
+}
+
+-(void) setHeadingView:(UIView *)headingView {
+    _headingView = headingView;
+    _headingView.frame = CGRectMake(0, 0, 40, 40);
+    if (self.trackingMode == MKUserTrackingModeFollowWithHeading) {
+        [self switchToView:_headingView];
+    }
+}
+
+-(void) switchToView:(UIView *)newView {
+    for (UIView *subview in self.customView.subviews) {
+        [subview removeFromSuperview];
+    }
+
+    [self.customView addSubview:newView];
+}
+
 -(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     MKUserTrackingMode trackingMode = [change[@"new"] intValue];
     UIView *newView;
@@ -64,11 +91,7 @@
             break;
     }
 
-    for (UIView *subview in self.customView.subviews) {
-        [subview removeFromSuperview];
-    }
-
-    [self.customView addSubview:newView];
+    [self switchToView:newView];
 }
 
 -(void) switchMode {
