@@ -36,7 +36,7 @@
 
 -(void) setNormalView:(UIView *)normalView {
     _normalView = normalView;
-    _normalView.frame = CGRectMake(0, 0, 40, 40);
+    _normalView.frame = CGRectMake(0, 0, 32, 32);
     _normalView.userInteractionEnabled = NO;
     if (self.trackingMode == MKUserTrackingModeNone) {
         [self switchToView:_normalView];
@@ -45,7 +45,7 @@
 
 -(void) setFollowView:(UIView *)followView {
     _followView = followView;
-    _followView.frame = CGRectMake(0, 0, 40, 40);
+    _followView.frame = CGRectMake(0, 0, 32, 32);
     _followView.userInteractionEnabled = NO;
     if (self.trackingMode == MKUserTrackingModeFollow) {
         [self switchToView:_followView];
@@ -54,7 +54,7 @@
 
 -(void) setHeadingView:(UIView *)headingView {
     _headingView = headingView;
-    _headingView.frame = CGRectMake(0, 0, 40, 40);
+    _headingView.frame = CGRectMake(0, 0, 32, 32);
     _headingView.userInteractionEnabled = NO;
     if (self.trackingMode == MKUserTrackingModeFollowWithHeading) {
         [self switchToView:_headingView];
