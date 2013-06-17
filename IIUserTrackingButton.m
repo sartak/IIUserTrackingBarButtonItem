@@ -39,7 +39,7 @@
     _normalView.frame = CGRectMake(0, 0, 32, 32);
     _normalView.userInteractionEnabled = NO;
     if (self.trackingMode == MKUserTrackingModeNone) {
-        [self switchToView:_normalView];
+        [self switchToView:_normalView animated:YES];
     }
 }
 
@@ -48,7 +48,7 @@
     _followView.frame = CGRectMake(0, 0, 32, 32);
     _followView.userInteractionEnabled = NO;
     if (self.trackingMode == MKUserTrackingModeFollow) {
-        [self switchToView:_followView];
+        [self switchToView:_followView animated:YES];
     }
 }
 
@@ -57,19 +57,43 @@
     _headingView.frame = CGRectMake(0, 0, 32, 32);
     _headingView.userInteractionEnabled = NO;
     if (self.trackingMode == MKUserTrackingModeFollowWithHeading) {
-        [self switchToView:_headingView];
+        [self switchToView:_headingView animated:YES];
     }
 }
 
--(void) switchToView:(UIView *)newView {
-    for (UIView *subview in self.subviews) {
-        [subview removeFromSuperview];
-    }
+-(void) switchToView:(UIView *)newView animated:(BOOL)animated {
+    NSArray *oldSubviews = self.subviews;
 
-    [self addSubview:newView];
+    if (animated) {
+        CGRect smallFrame = CGRectMake(16, 16, 0, 0);
+        CGRect bigFrame = CGRectMake(0, 0, 32, 32);
+        newView.frame = smallFrame;
+        
+        [self addSubview:newView];
+
+        [UIView animateWithDuration:0.75f
+                         animations:^{
+                             newView.frame = bigFrame;
+                             for (UIView *subview in oldSubviews) {
+                                 subview.frame = smallFrame;
+                             }
+                         } completion:^(BOOL finished) {
+                             for (UIView *subview in oldSubviews) {
+                                 [subview removeFromSuperview];
+                                 subview.frame = bigFrame;
+                             }
+                         }];
+    }
+    else {
+        for (UIView *subview in oldSubviews) {
+            [subview removeFromSuperview];
+        }
+
+        [self addSubview:newView];
+    }
 }
 
--(void) switchToMode:(MKUserTrackingMode)newMode {
+-(void) switchToMode:(MKUserTrackingMode)newMode animated:(BOOL)animated {
     UIView *newView;
 
     switch (newMode) {
@@ -85,12 +109,12 @@
             break;
     }
 
-    [self switchToView:newView];
+    [self switchToView:newView animated:animated];
 }
 
 -(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     MKUserTrackingMode trackingMode = [change[@"new"] intValue];
-    [self switchToMode:trackingMode];
+    [self switchToMode:trackingMode animated:NO];
 }
 
 -(void) mapSwitchedMode {
@@ -113,7 +137,7 @@
     [self.mapView setUserTrackingMode:newMode animated:YES];
 
     // setUserTrackingMode:animated: doesn't seem to fire KVO, so we have to manually switch views
-    [self switchToMode:newMode];
+    [self switchToMode:newMode animated:YES];
 }
 
 -(void) dealloc {
