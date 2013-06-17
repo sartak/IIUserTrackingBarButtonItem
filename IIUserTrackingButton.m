@@ -82,6 +82,11 @@
                                  [subview removeFromSuperview];
                                  subview.frame = bigFrame;
                              }
+
+                             // rapid tapping can end up with all the subviews removed
+                             if ([self.subviews count] == 0) {
+                                 [self switchToMode:self.trackingMode animated:NO];
+                             }
                          }];
     }
     else {
